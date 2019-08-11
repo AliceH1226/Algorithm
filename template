@@ -1,0 +1,73 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn=1e2;
+int nP;
+int t[maxn],P[maxn];
+void table(string w)
+{
+    int pos=1,cnd=0;
+    int w_len=w.length();
+    t[0]=-1;
+    while(pos<w_len)
+    {
+        if(w[pos]==w[cnd])
+        {
+            t[pos]=t[cnd];
+        }
+        else
+        {
+            t[pos]=cnd;
+            cnd=t[cnd];
+            while(cnd>=0&&w[pos]!=w[cnd])
+            {
+                cnd=t[cnd];
+            }
+        }
+        pos++;
+        cnd++;
+    }
+    t[pos]=cnd;
+}
+void kmp_search(string S, string W)
+{
+
+    int j=0,k=0;
+    nP=0;
+    int S_len=S.length(),W_len=W.length();
+    while(j<S_len)
+    {
+        if(S[j]==W[k])
+        {
+            j++;k++;
+            if(k==W_len)
+            {
+                P[nP]=j-k;
+                nP++;
+                k=t[k];
+            }
+        }
+        else
+        {
+            k=t[k];
+            if(k<0)
+            {
+                j++;
+                k++;
+            }
+        }
+    }
+}
+
+int main()
+{
+
+
+    string S,W;
+    cin>>S>>W;
+    table(W);
+    kmp_search(S,W);
+    for(int i=0;i<S.length();i++)
+    cout<<P[i]<<endl;
+    cout<<endl;
+    cout<<nP<<endl;
+}
