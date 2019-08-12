@@ -1,3 +1,5 @@
+//Euclid Algorithm
+//https://en.wikipedia.org/wiki/Greatest_common_divisor
 ll gcd(ll a, ll b)//used when both of a and b are not zeros initially
 {
    
