@@ -1,0 +1,13 @@
+ll gcd(ll a, ll b)//used when both of a and b are not zeros initially
+{
+   
+    if(a==b)return a;
+    else if(a>b)return gcd(a-b,b);
+    else if(a<b)return gcd(a,b-a);
+
+}
+ll gcd2(ll a, ll b)//general usage
+{
+    if(b==0)return a;
+    return gcd2(b,a%b);
+}
