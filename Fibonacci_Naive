@@ -1,9 +1,9 @@
-#naive implementation, based on the mathematical definition
+//naive implementation, based on the mathematical definition
 
 #include<bits/stdc++.h>
 using namespace std;
 
-void fibonacci(int n)
+int fibonacci(int n)
 {
     if(n<=1)return n;
     else return fibonacci(n-1)+fibonacci(n-2);
@@ -12,4 +12,30 @@ int main()
 {
     int n;
     cin>>n;
+    cout<<fibonacci(n)<<endl;
+    //f(0,1,2)={0, 1, 1} 
 }
+
+//another version without recursion, reduce recalculation
+#include<bits/stdc++.h>
+using namespace std;
+
+const int maxn=1e2+7;
+int f[maxn];
+void pre()
+{
+    f[0]=0;
+    f[1]=1;
+    for(int i=2;i<maxn;i++)
+    {
+        f[i]=f[i-1]+f[i-2];
+    }
+}
+int main()
+{
+    int n;
+    cin>>n;
+    pre();
+    cout<<f[n]<<endl;
+}
+
