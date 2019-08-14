@@ -1,2 +1,76 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+#include<bits/stdc++.h>
+using namespace std;
+const int maxn=1e3+5;
+int uf[maxn];
+int FIND(int x)
+{
+    return uf[x]==x?x:uf[x]=FIND(uf[x]);
+}
+void UNION(int x, int y)
+{
+    uf[FIND(x)]=FIND(y);
+}
+int w[maxn],b[maxn];
+int ww[maxn],bb[maxn];
+int dp[maxn][maxn];
+bool seen[maxn];
+ 
+int main()
+{
+    ios::sync_with_stdio(false);cin.tie(0);
+    int n,m,W;
+    cin>>n>>m>>W;
+    for(int i=1;i<=n;i++)cin>>w[i];
+    for(int i=1;i<=n;i++)cin>>b[i];
+    for(int i=1;i<=n;i++)uf[i]=i;
+    while(m--)
+    {
+        int a,b;
+        cin>>a>>b;
+        UNION(a,b);
+    }
+    for(int i=1;i<=n;i++)
+    {
+        ww[FIND(i)]+=w[i];
+        bb[FIND(i)]+=b[i];
+    }
+    dp[0][0]=0;
+ 
+    int cc=1;
+    for(int j=1;j<=n;j++)
+    {
+        int pp=FIND(j);
+        if(seen[pp])continue;
+        seen[pp]=true;
+        for(int i=1;i<=W;i++)
+        {
+            dp[cc][i]=dp[cc-1][i];
+            if(ww[pp]<=i)
+            {
+                dp[cc][i]=max(dp[cc][i],dp[cc-1][i-ww[pp]]+bb[pp]);
+            }
+        }
+        for(int t=1;t<=n;t++)
+        {
+            if(FIND(t)!=pp)
+                continue;
+            for(int i=1;i<=W;i++)
+            {
+                if(w[t]<=i)
+                {
+                    dp[cc][i]=max(dp[cc][i],dp[cc-1][i-w[t]]+b[t]);
+                }
+            }
+        }
+        cc++;
+ 
+    }
+    cc--;
+    int ans=0;
+ 
+    for(int i=W;i>=0;i--)
+    {
+        ans=max(ans,dp[cc][i]);
+    }
+    cout<<ans<<endl;
+}
