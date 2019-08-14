@@ -1,8 +1,10 @@
+//https://en.wikipedia.org/wiki/Knapsack_problem
+//http://codeforces.com/contest/741/problem/B
 #include<bits/stdc++.h>
 using namespace std;
 const int maxn=1e3+5;
 int uf[maxn];
-int FIND(int x)
+int FIND(int x)//disjoint set
 {
     return uf[x]==x?x:uf[x]=FIND(uf[x]);
 }
@@ -29,28 +31,28 @@ int main()
         cin>>a>>b;
         UNION(a,b);
     }
-    for(int i=1;i<=n;i++)
+    for(int i=1;i<=n;i++)//group
     {
         ww[FIND(i)]+=w[i];
         bb[FIND(i)]+=b[i];
     }
     dp[0][0]=0;
  
-    int cc=1;
+    int cc=1;//cc is the number of groups
     for(int j=1;j<=n;j++)
     {
-        int pp=FIND(j);
+        int pp=FIND(j);//find father
         if(seen[pp])continue;
         seen[pp]=true;
-        for(int i=1;i<=W;i++)
+        for(int i=1;i<=W;i++)//for this group, choose all ele in this group or none of them
         {
             dp[cc][i]=dp[cc-1][i];
             if(ww[pp]<=i)
             {
-                dp[cc][i]=max(dp[cc][i],dp[cc-1][i-ww[pp]]+bb[pp]);
+                dp[cc][i]=max(dp[cc][i],dp[cc-1][i-ww[pp]]+bb[pp]);//choose or not, knapsack problem formula
             }
         }
-        for(int t=1;t<=n;t++)
+        for(int t=1;t<=n;t++)//enumerate each ele in this group, choose this ele or not
         {
             if(FIND(t)!=pp)
                 continue;
@@ -58,7 +60,7 @@ int main()
             {
                 if(w[t]<=i)
                 {
-                    dp[cc][i]=max(dp[cc][i],dp[cc-1][i-w[t]]+b[t]);
+                    dp[cc][i]=max(dp[cc][i],dp[cc-1][i-w[t]]+b[t]);//choose or not, knapsack problem formula
                 }
             }
         }
