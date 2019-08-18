@@ -1,0 +1,39 @@
+//https://www.di-mgt.com.au/euclidean.html
+//https://stackoverflow.com/questions/9990491/how-to-solve-linear-diophantine-equations-in-programming
+//https://codeforces.com/contest/7/problem/C
+
+
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+
+void egcd(ll n, ll m, ll& x, ll& y, ll& d) {
+    ll x1 = 0, y1 = 1, x2 = 1, y2 = 0, q, r;
+    while (m) {
+        q = n / m; r = n % m;
+        x = x2 - q * x1;
+        y = y2 - q * y1;
+        n = m; m = r; x2 = x1; x1 = x; y2 = y1; y1 = y;
+    }
+    x = x2, y = y2, d = n;
+}
+bool dioph (ll a, ll b, ll c, ll & x, ll & y, ll & d)
+{
+    egcd (a, b, x, y, d);
+    if (c % d ) return false;
+    x *= c / d; y *= c / d;
+    return true;
+}
+
+int main() {
+
+    ll a, b, c;
+    cin >> a >> b >> c;
+    c = -c;
+    ll x, y, tmp;
+    if (!dioph (a, b, c, x, y, tmp))
+        cout << -1 << endl;
+    else
+        cout << x << ' ' << y << endl;
+	return 0;
+}
