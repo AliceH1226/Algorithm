@@ -1,0 +1,103 @@
+//https://vjudge.net/problem/POJ-3468
+//https://blog.csdn.net/qq_20468287/article/details/54584937
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long ll;
+const int maxn=1e5+5;
+struct node
+{
+    int l,r,m;
+    ll sum,mark;
+};
+node T[maxn<<2];
+int a[maxn];
+void build(int id, int l, int r)
+{
+    T[id].l=l;
+    T[id].r=r;
+    T[id].m=(l+r)>>1;
+    T[id].mark=0;
+    if(l==r)
+    {
+        T[id].sum=a[l];
+        return;
+    }
+    build(id<<1,l,T[id].m);
+    build(id<<1|1,T[id].m+1,r);
+    T[id].sum=T[id<<1].sum+T[id<<1|1].sum;
+
+
+}
+void update(int id, int l, int r, int val)
+{
+    if(T[id].l==l&&T[id].r==r)
+    {
+        T[id].mark+=val;
+        return;
+    }
+    T[id].sum+=(ll)val*(r-l+1);
+    if(T[id].m>=r)
+    {
+        update(id<<1,l,r,val);
+    }
+    else if(T[id].m<l)
+    {
+        update(id<<1|1,l,r,val);
+    }
+    else
+    {
+        update(id<<1,l,T[id].m,val);
+        update(id<<1|1,T[id].m+1,r,val);
+    }
+}
+ll query(int id, int l, int r)
+{
+    if(T[id].l==l&&T[id].r==r)
+    {
+        return T[id].sum+T[id].mark*(ll)(r-l+1);
+    }
+    if(T[id].mark)
+    {
+        T[id<<1].mark+=T[id].mark;
+        T[id<<1|1].mark+=T[id].mark;
+        T[id].sum+=(ll)(T[id].r-T[id].l+1)*T[id].mark;
+        T[id].mark=0;
+    }
+    if(T[id].m>=r)
+    {
+        return query(id<<1,l,r);
+    }
+    else if(T[id].m<l)
+    {
+        return query(id<<1|1,l,r);
+    }
+    else
+    {
+        return query(id<<1,l,T[id].m)+query(id<<1|1,T[id].m+1,r);
+    }
+}
+
+int main()
+{
+    int n,Q;
+    cin>>n>>Q;
+    string str;
+    int b,c,d;
+    for(int i=1;i<=n;i++)
+        cin>>a[i];
+    build(1,1,n);
+    for(int i=0;i<Q;i++)
+    {
+        cin>>str;
+        if(str[0]=='Q')
+        {
+            cin>>b>>c;
+            cout<<query(1,b,c)<<endl;
+        }
+        else
+        {
+            cin>>b>>c>>d;
+            update(1,b,c,d);
+        }
+    }
+}
